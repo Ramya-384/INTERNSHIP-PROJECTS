@@ -1,0 +1,196 @@
+<header>
+  <div class="overlay"></div>
+  <div class="header-text">
+    <div class="menu">
+      <div class="brand">
+        <h1><a class="bidnow white-text" href="/">BidNow</a></h1>
+        <p>Real-Time Auction Experience</p>
+      </div>
+      <div class="navigation">
+        <button
+          [class.active]="activeCategory === 'all'"
+          (click)="filterProducts('all')"
+        >
+          Home
+        </button>
+        <button
+          [class.active]="activeCategory === 'electronics'"
+          (click)="filterProducts('electronics')"
+        >
+          Electronics
+        </button>
+        <button
+          [class.active]="activeCategory === 'fashion'"
+          (click)="filterProducts('fashion')"
+        >
+          Fashion
+        </button>
+        <button
+          [class.active]="activeCategory === 'books'"
+          (click)="filterProducts('books')"
+        >
+          Books
+        </button>
+        <button
+          [class.active]="activeCategory === 'art & handirafts'"
+          (click)="filterProducts('art & handirafts')"
+        >
+          Art & Handirafts
+        </button>
+        <button
+          [class.active]="activeCategory === 'furniture'"
+          (click)="filterProducts('furniture')"
+        >
+          Furniture
+        </button>
+        <button (click)="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="user-info">
+      <h3>Welcome, {{ username.split(" ")[0] }}</h3>
+      <p>{{ role }} | {{ email }}</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="heading">
+    <h2>Your Listings</h2>
+    <div class="search-container">
+      <svg
+        class="feather feather-search search"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" x2="16.65" y1="21" y2="16.65" />
+      </svg>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search"
+        [(ngModel)]="searchQuery"
+        (input)="searchProducts()"
+      />
+    </div>
+  </div>
+
+  <div class="product-grid">
+    <button class="add-listing-button" (click)="openAddListingModal()">
+      Add Listing
+    </button>
+    <div *ngFor="let product of searchProducts()" class="product-card">
+      <div class="image">
+        <img [src]="product.image" alt="{{ product.name }}" />
+      </div>
+      <div class="details">
+        <div class="info-text">
+          <h3>{{ product.name }}</h3>
+          <p>Starting Price: ₹{{ product.minimumprice }}</p>
+        </div>
+        <div class="buttons">
+          <button class="details-button" (click)="navigateToDetails(product.id)">Details</button>
+          <button class="edit-button" (click)="openEditListingModal(product)">Edit</button>
+          <button class="delete-button" (click)="deleteListing(product.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div *ngIf="isAddListingModalOpen" class="modal-overlay">
+  <div class="modal-container">
+    <app-list-product
+      class="format"
+      (closeModal)="closeAddListingModal()"
+      (submitListing)="submitListing($event)"
+    >
+    </app-list-product>
+  </div>
+</div>
+
+<div *ngIf="isEditListingModalOpen" class="modal">
+  <h2>Edit Listing</h2>
+  <div class="content">
+    <form #editForm="ngForm" (ngSubmit)="submitEditListing(editForm.value)">
+      <div class="fields">
+        <div class="form-fields">
+          <div class="group">
+            <label for="edit-productName">Product Name</label>
+            <input
+              id="edit-productName"
+              type="text"
+              name="productName"
+              [(ngModel)]="editData.productName"
+              required
+            />
+          </div>
+          <div class="group">
+            <label for="edit-minimumPrice">Minimum Price</label>
+            <input
+              id="edit-minimumPrice"
+              type="number"
+              name="minimumPrice"
+              [(ngModel)]="editData.minimumPrice"
+              required
+            />
+          </div>
+          <div class="group">
+            <label for="edit-productCategory">Product Category</label>
+            <select
+              id="edit-productCategory"
+              name="productCategory"
+              [(ngModel)]="editData.productCategory"
+              required
+            >
+              <option value="" disabled>Select a Category</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+          <div class="group">
+            <label for="edit-sessionDate">Session Date</label>
+            <input
+              id="edit-sessionDate"
+              type="date"
+              name="sessionDate"
+              [(ngModel)]="editData.sessionDate"
+              required
+            />
+          </div>
+          <div class="group">
+            <label for="edit-sessionTime">Session Time</label>
+            <input
+              id="edit-sessionTime"
+              type="time"
+              name="sessionTime"
+              [(ngModel)]="editData.sessionTime"
+              required
+            />
+          </div>
+          <div class="group">
+            <label for="edit-productImage">Product Image</label>
+            <input
+              id="edit-productImage"
+              type="file"
+              name="productImage"
+              (change)="onEditImageChange($event)"
+            />
+          </div>
+        </div>
+        <div class="buttons">
+          <button type="submit" class="submit-btn">Update Product</button>
+          <button type="button" class="cancel-btn" (click)="closeEditListingModal()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

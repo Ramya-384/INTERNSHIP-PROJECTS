@@ -1,0 +1,51 @@
+<h2>Add Listing</h2>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="group">
+      <label>
+        Product Name:
+        <input type="text" formControlName="productName" />
+      </label>
+    </div>
+    <div class="group">
+      <label>
+        Minimum Price:
+        <input type="number" formControlName="minimumPrice" />
+      </label>
+    </div>
+    <div class="group">
+      <label>
+        Product Category:
+        <select formControlName="productCategory">
+          <option value="" disabled>Select a Category</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </label>
+    </div>
+    <div class="group">
+      <label>
+        Session Date:
+        <input type="date" formControlName="sessionDate" />
+      </label>
+    </div>
+    <div class="group">
+      <label>
+        Session Time:
+        <input type="time" formControlName="sessionTime">
+      </label>      
+    </div>
+    <div class="group">
+      <label>
+        Upload Product Image:
+        <input type="file" (change)="onImageUpload($event)" />
+      </label>
+    </div>
+
+    <div class="buttons">
+      <button type="submit" class="submit-btn" [disabled]="productForm.invalid">Submit</button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
