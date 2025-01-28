@@ -1,0 +1,19 @@
+<div class="product-details" *ngIf="product; else loading">
+  <div class="image">
+    <img [src]="product.image" alt="{{ product.name }}" />
+  </div>
+  <div class="info">
+    <h1>{{ product.name }}</h1>
+    <p><strong>Starting Price:</strong> ₹{{ product.minimumprice }}</p>
+    <p><strong>Category:</strong> {{ product.category }}</p>
+    <p><strong>Session Date:</strong> {{ product.sessionDate }}</p>
+    <p><strong>Session Time:</strong> {{ product.sessionTime }}</p>
+  </div>
+  <div class="auctioneer-details">
+    <h2>Auctioneer Details</h2>
+    <p><strong>Email:</strong> {{ product.auctioneerId }}</p>
+  </div>
+</div>
+<ng-template #loading>
+  <p>Loading product details...</p>
+</ng-template>
